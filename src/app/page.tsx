@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Search, Globe, ChevronDown } from "lucide-react"
+import { client } from "@/sanity/sanity.client"
 
 /* ---------------------------------------
    GLOBAL CURSOR LIGHT (subtle radial glow)
@@ -275,6 +276,20 @@ function ClientParticleField() {
 ----------------------------------------*/
 export default function HomePage() {
   useLightFollow()
+    const [cmsData, setCmsData] = useState<any>(null)
+
+  useEffect(() => {
+    async function getData() {
+      const data = await client.fetch(`*[_type == "homepage"][0]{
+        headline,
+        subheadline,
+        ctaPrimary,
+        ctaSecondary
+      }`)
+      setCmsData(data)
+    }
+    getData()
+  }, [])
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [searchIndex, setSearchIndex] = useState(0)
@@ -424,76 +439,89 @@ export default function HomePage() {
       {/* Electrically Charged Particle Field - Fixed with client-only random */}
       <ClientParticleField />
 
-      {/* ===================== HERO ===================== */}
-      <section className="relative flex flex-col items-center justify-center text-center py-32 px-6 z-10">
-        <motion.h1
-          className="text-5xl md:text-7xl font-extrabold max-w-5xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-[#1A73E8] to-[#7E3FF2]"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          Outrank Rivals. Own The Search.
-        </motion.h1>
-        <motion.p
-          className="text-lg md:text-2xl text-gray-300 max-w-3xl mt-6"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 1 }}
-        >
-          Generated $500M+ in client revenue. We deliver measurable growth through AI automation and human creativity—outperforming competitors for U.S. businesses like yours.
-        </motion.p>
+{/* ===================== HERO ===================== */}
+<section className="relative flex flex-col items-center justify-center text-center py-32 px-6 z-10">
+  <motion.h1
+    className="text-5xl md:text-7xl font-extrabold max-w-5xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-[#1A73E8] to-[#7E3FF2]"
+    initial={{ opacity: 0, y: 40 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1 }}
+  >
+    {cmsData?.headline || "Outrank Rivals. Own The Search."}
+  </motion.h1>
 
-        {/* Language Toggle */}
-        <button onClick={() => setIsEnglish(!isEnglish)} className="flex items-center text-gray-400 hover:text-white mt-4 mb-4">
-          <Globe className="w-4 h-4 mr-2" /> {isEnglish ? 'Español' : 'English'}
-        </button>
+  <motion.p
+    className="text-lg md:text-2xl text-gray-300 max-w-3xl mt-6"
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.3, duration: 1 }}
+  >
+    {cmsData?.subheadline || "Turn search into your most profitable channel with Search Rivals. We attract your highest-value customers at the exact moment they’re ready to buy."}
+  </motion.p>
 
-        {/* Search Box Animation */}
-        <motion.div
-          className="relative mt-4 w-[90%] max-w-[680px] mx-auto"
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.9, delay: 0.1 },
-            },
-          }}
-        >
-          <div className="relative bg-white/10 backdrop-blur-md border border-[#1A73E8]/30 rounded-full shadow-lg flex items-center px-6 py-4 overflow-hidden">
-            <Search className="w-5 h-5 text-[#B0B0B0] mr-4 flex-shrink-0" strokeWidth={2} />
-            <motion.span
-              className="text-gray-200 text-lg md:text-xl whitespace-nowrap truncate text-left flex-1"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              {typedText}
-              <span className="animate-pulse text-[#1A73E8]">|</span>
-            </motion.span>
-          </div>
-          <div className="absolute inset-0 rounded-full bg-[#1A73E8]/10 blur-3xl opacity-20 pointer-events-none" />
-        </motion.div>
+  {/* Language Toggle */}
+  <button
+    onClick={() => setIsEnglish(!isEnglish)}
+    className="flex items-center text-gray-400 hover:text-white mt-8"
+  >
+    <Globe className="w-4 h-4 mr-2" /> {isEnglish ? 'Español' : 'English'}
+  </button>
 
-        {/* Primary CTAs */}
-        <motion.div
-          className="mt-10 flex flex-col sm:flex-row gap-6"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 1 }}
-        >
-          <motion.div whileHover={{ scale: 1.08, boxShadow: '0 0 25px #1A73E8' }} transition={{ type: 'spring', stiffness: 200 }}>
-            <Button size="lg" className="bg-[#1A73E8] hover:bg-[#1559b2] text-lg px-10 py-6 rounded-2xl shadow-lg">
-              Get Your Free Audit
-            </Button>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.08, boxShadow: '0 0 25px #7E3FF2' }} transition={{ type: 'spring', stiffness: 200 }}>
-            <Button size="lg" variant="outline" className="border-[#7E3FF2] text-[#1A73E8] text-lg px-10 py-6 rounded-2xl">
-              See Our Work
-            </Button>
-          </motion.div>
-        </motion.div>
-      </section>
+  {/* Search Box Animation */}
+  <motion.div
+    className="relative mt-8 w-[90%] max-w-[680px] mx-auto"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.9, delay: 0.3 }}
+  >
+    <div className="relative bg-white/10 backdrop-blur-md border border-[#1A73E8]/30 rounded-full shadow-lg flex items-center px-6 py-4 overflow-hidden">
+      <Search className="w-5 h-5 text-[#B0B0B0] mr-4 flex-shrink-0" strokeWidth={2} />
+      <motion.span
+        className="text-gray-200 text-lg md:text-xl whitespace-nowrap truncate text-left flex-1"
+        initial={{ opacity: 0, x: 30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {typedText}
+        <span className="animate-pulse text-[#1A73E8]">|</span>
+      </motion.span>
+    </div>
+    <div className="absolute inset-0 rounded-full bg-[#1A73E8]/10 blur-3xl opacity-20 pointer-events-none" />
+  </motion.div>
+
+  {/* Primary CTAs */}
+  <motion.div
+    className="mt-12 flex flex-col sm:flex-row gap-6"
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.8, duration: 1 }}
+  >
+    <motion.div
+      whileHover={{ scale: 1.08, boxShadow: '0 0 25px #1A73E8' }}
+      transition={{ type: 'spring', stiffness: 200 }}
+    >
+      <Button
+        size="lg"
+        className="bg-[#1A73E8] hover:bg-[#1559b2] text-lg px-10 py-6 rounded-2xl shadow-lg"
+      >
+        {cmsData?.ctaPrimary || "Get Your Free Audit"}
+      </Button>
+    </motion.div>
+    <motion.div
+      whileHover={{ scale: 1.08, boxShadow: '0 0 25px #7E3FF2' }}
+      transition={{ type: 'spring', stiffness: 200 }}
+    >
+      <Button
+        size="lg"
+        variant="outline"
+        className="border-[#7E3FF2] text-[#1A73E8] text-lg px-10 py-6 rounded-2xl"
+      >
+        {cmsData?.ctaSecondary || "See Our Work"}
+      </Button>
+    </motion.div>
+  </motion.div>
+</section>
+
 
       {/* ===================== FEATURED ON ===================== */}
       <section className="relative bg-[#0A0A0A] py-12 border-t border-[#1A73E8]/20 overflow-hidden z-10">
