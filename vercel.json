@@ -1,0 +1,25 @@
+{
+  "ignoreCommand": "echo 'Skipping studio build'",
+  "buildCommand": "pnpm build",
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SANITY_PROJECT_ID": "t1eitz3d",
+      "NEXT_PUBLIC_SANITY_DATASET": "production",
+      "NEXT_PUBLIC_SANITY_API_VERSION": "2023-10-01",
+      "NEXT_PUBLIC_SANITY_TOKEN": "skKaqqHSLFCTY6zS4YFobC3cLJKOBrOza9k1s1tZCZ7ltI4PGorMzWiE4LyNXpvugesV8WBR39Uqm1WSoGPEsUSGhMicHCJSXIzjdVhtx9XD7GKI0tuB13GBzCrzNAH08Y7rfZS0bWneZiYWMCygkL7Z9lQqWDvtj08PbG0Vvmiby2019JFc"
+    }
+  },
+  "functions": {
+    "api/**/*.{js,ts}": {
+      "maxDuration": 10
+    }
+  },
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "ignore": [
+    "src/app/studio"
+  ]
+}
