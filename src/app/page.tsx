@@ -456,7 +456,7 @@ export default function HomePage() {
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.3, duration: 1 }}
   >
-    {cmsData?.subheadline || "Turn search into your most profitable channel with Search Rivals. We attract your highest-value customers at the exact moment they’re ready to buy."}
+    {cmsData?.subheadline || "Turn  search into your most profitable channel with Search Rivals. We attract your highest-value customers at the exact moment they’re ready to buy.."}
   </motion.p>
 
   {/* Language Toggle */}
