@@ -16,6 +16,5 @@
     "deploymentEnabled": {
       "main": true
     }
-  },
-  "ignore": ["src/app/studio", "sanity.config.ts"]
+  }
 }
