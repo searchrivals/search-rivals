@@ -4,12 +4,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    appDir: true,
-  },
   output: 'standalone',
-
-  // 👇 ensures /studio is ignored at build time
+  experimental: {
+    typedRoutes: true
+  },
   async redirects() {
     return [
       {
@@ -19,16 +17,23 @@ const nextConfig = {
       },
     ];
   },
-
   webpack: (config, { isServer }) => {
+    // Skip building Sanity Studio in production
     if (isServer) {
-      config.externals = config.externals || [];
       config.externals.push({
         '@sanity/vision': 'commonjs @sanity/vision',
+        '@sanity/cli': 'commonjs @sanity/cli'
       });
     }
+
+    // Ignore studio directory entirely
+    config.module.rules.push({
+      test: /studio/,
+      use: 'null-loader'
+    });
+
     return config;
-  },
+  }
 };
 
 export default nextConfig;

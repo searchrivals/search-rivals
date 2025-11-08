@@ -1,19 +1,4 @@
 {
   "buildCommand": "pnpm build",
-  "ignoreCommand": "echo 'Skipping Sanity Studio build'",
-  "routes": [
-    {
-      "src": "/studio/.*",
-      "status": 404,
-      "continue": false
-    }
-  ],
-  "functions": {
-    "app/studio/**": {
-      "excludeFiles": "**"
-    },
-    "studio/**": {
-      "excludeFiles": "**"
-    }
-  }
+  "ignoreCommand": "echo 'Skipping Sanity Studio build'"
 }
