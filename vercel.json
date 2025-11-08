@@ -1,5 +1,9 @@
 {
   "buildCommand": "pnpm build",
+  "ignoreCommand": "echo 'Skipping Sanity Studio build'",
+  "routes": [
+    { "src": "/studio/.*", "dest": "/studio/index.html" }
+  ],
   "env": {
     "NEXT_PUBLIC_SANITY_PROJECT_ID": "t1eitz3d",
     "NEXT_PUBLIC_SANITY_DATASET": "production",
