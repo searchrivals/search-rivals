@@ -4,6 +4,18 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-};
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  output: 'standalone',
+  async rewrites() {
+    return [
+      {
+        source: '/studio/:path*',
+        destination: '/studio/index.html',
+      },
+    ]
+  },
+}
 
-export default nextConfig;
+export default nextConfig
