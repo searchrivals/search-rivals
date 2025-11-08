@@ -15,23 +15,26 @@ const nextConfig = {
         source: '/studio/:path*',
         destination: '/studio/index.html',
       },
-    ]
+    ];
   },
 
-  // 👇 this line prevents Studio from being statically built
-  generateBuildId: async () => {
-    return 'build-' + Date.now().toString()
+  // 👇 completely ignore Sanity Studio during static generation
+  async exportPathMap(defaultPathMap) {
+    delete defaultPathMap['/studio/[[...tool]]'];
+    delete defaultPathMap['/studio'];
+    return defaultPathMap;
   },
-  // 👇 this ensures Studio is ignored during pre-render
+
+  // 👇 stop pre-rendering errors by skipping Sanity server imports
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals = config.externals || []
+      config.externals = config.externals || [];
       config.externals.push({
         '@sanity/vision': 'commonjs @sanity/vision',
-      })
+      });
     }
-    return config
+    return config;
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
