@@ -26,10 +26,12 @@ const nextConfig = {
       });
     }
 
-    // Ignore studio directory entirely
+    // Ignore anything in /studio during build
     config.module.rules.push({
       test: /studio/,
-      use: 'null-loader'
+      use: {
+        loader: 'ignore-loader'
+      }
     });
 
     return config;
