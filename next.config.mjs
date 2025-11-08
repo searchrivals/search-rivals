@@ -9,23 +9,17 @@ const nextConfig = {
   },
   output: 'standalone',
 
-  async rewrites() {
+  // 👇 ensures /studio is ignored at build time
+  async redirects() {
     return [
       {
         source: '/studio/:path*',
-        destination: '/studio/index.html',
+        destination: '/',
+        permanent: false,
       },
     ];
   },
 
-  // 👇 completely ignore Sanity Studio during static generation
-  async exportPathMap(defaultPathMap) {
-    delete defaultPathMap['/studio/[[...tool]]'];
-    delete defaultPathMap['/studio'];
-    return defaultPathMap;
-  },
-
-  // 👇 stop pre-rendering errors by skipping Sanity server imports
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || [];
