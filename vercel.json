@@ -4,9 +4,16 @@
   "routes": [
     {
       "src": "/studio/.*",
-      "dest": "/studio/index.html",
-      "continue": true
+      "status": 404,
+      "continue": false
     }
   ],
-  "excludeFiles": "{app/studio/**,studio/**}"
+  "functions": {
+    "app/studio/**": {
+      "excludeFiles": "**"
+    },
+    "studio/**": {
+      "excludeFiles": "**"
+    }
+  }
 }
