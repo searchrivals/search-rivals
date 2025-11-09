@@ -1,11 +1,21 @@
 'use client'
 
+import React from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Search, Globe, ChevronDown } from "lucide-react"
 import { client } from "@/sanity/sanity.client"
+
+// Interface for particle and blob objects to fix implicit 'any'
+interface Particle {
+  x: number;
+  y: number;
+  s: number;
+  v: number;
+  a: number;
+}
 
 /* ---------------------------------------
    GLOBAL CURSOR LIGHT (subtle radial glow)
@@ -27,7 +37,7 @@ function useLightFollow() {
 ----------------------------------------*/
 function TiltCard({ children }: { children: React.ReactNode }) {
   const r = useRef<HTMLDivElement | null>(null)
-  const onMove = (e: React.MouseEvent) => {
+  const onMove = (e: React.MouseEvent) => {  // Typed 'e'
     const el = r.current
     if (!el) return
     const rect = el.getBoundingClientRect()
@@ -73,113 +83,13 @@ function LineDraw({ className = '', path, stroke = '#1A73E8', width = 2, delay =
 }
 
 /* ---------------------------------------
-   LAVA FIELD (global background canvas)
-   - emissive plasma blobs + particles
-----------------------------------------*/
-function LavaField() {
-  const ref = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const c = ref.current!
-    const ctx = c.getContext('2d', { alpha: true })!
-    let w = (c.width = window.innerWidth)
-    let h = (c.height = window.innerHeight)
-
-    const resize = () => {
-      w = c.width = window.innerWidth
-      h = c.height = window.innerHeight
-    }
-    window.addEventListener('resize', resize)
-
-    const blobs = Array.from({ length: 7 }).map((_, i) => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: 140 + Math.random() * 140,
-      dx: (Math.random() - 0.5) * 0.6,
-      dy: (Math.random() - 0.5) * 0.6,
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.005 + Math.random() * 0.01,
-      hue: i % 2 === 0 ? 262 : 214 // purple/blue alternation
-    }))
-
-    const particles = Array.from({ length: 120 }).map(() => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      s: Math.random() * 1.6 + 0.4,
-      v: Math.random() * 0.4 + 0.1,
-      a: Math.random() * Math.PI * 2
-    }))
-
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h)
-      ctx.globalCompositeOperation = 'source-over'
-      ctx.fillStyle = 'rgba(10,10,10,0.6)'
-      ctx.fillRect(0, 0, w, h)
-
-      // emissive particles
-      ctx.globalCompositeOperation = 'screen'
-      particles.forEach(p => {
-        p.x += Math.cos(p.a) * p.v
-        p.y += Math.sin(p.a) * p.v
-        p.a += 0.002
-        if (p.x < -20) p.x = w + 20
-        if (p.x > w + 20) p.x = -20
-        if (p.y < -20) p.y = h + 20
-        if (p.y > h + 20) p.y = -20
-
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 18 * p.s)
-        g.addColorStop(0, 'rgba(255,255,255,0.08)')
-        g.addColorStop(1, 'rgba(0,0,0,0)')
-        ctx.fillStyle = g
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, 18 * p.s, 0, Math.PI * 2)
-        ctx.fill()
-      })
-
-      // lava blobs
-      blobs.forEach(b => {
-        b.phase += b.speed
-        b.x += b.dx + Math.cos(b.phase) * 0.3
-        b.y += b.dy + Math.sin(b.phase * 0.9) * 0.3
-        if (b.x < -b.r || b.x > w + b.r) b.dx *= -1
-        if (b.y < -b.r || b.y > h + b.r) b.dy *= -1
-
-        const core = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * 0.65)
-        core.addColorStop(0, `hsla(${b.hue}, 90%, 60%, 0.45)`)
-        core.addColorStop(0.5, `hsla(${b.hue === 262 ? 214 : 262}, 90%, 55%, 0.3)`)
-        core.addColorStop(1, 'rgba(0,0,0,0)')
-        ctx.fillStyle = core
-        ctx.beginPath()
-        ctx.arc(b.x, b.y, b.r * 0.9, 0, Math.PI * 2)
-        ctx.fill()
-
-        const halo = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * 1.15)
-        halo.addColorStop(0, `hsla(${b.hue}, 100%, 70%, 0.1)`)
-        halo.addColorStop(1, 'rgba(0,0,0,0)')
-        ctx.fillStyle = halo
-        ctx.beginPath()
-        ctx.arc(b.x, b.y, b.r * 1.15, 0, Math.PI * 2)
-        ctx.fill()
-      })
-
-      requestAnimationFrame(draw)
-    }
-
-    draw()
-    return () => window.removeEventListener('resize', resize)
-  }, [])
-
-  return <canvas ref={ref} className="w-full h-full block" />
-}
-
-/* ---------------------------------------
    CLIENT PARTICLE FIELD (to avoid hydration mismatch)
 ----------------------------------------*/
 function ClientParticleField() {
   const [particleStyles, setParticleStyles] = useState<Array<React.CSSProperties>>([]);
 
   useEffect(() => {
-    const styles = [...Array(80)].map(() => ({
+    const styles = [...Array(80)].map((_, i: number) => ({  // Typed 'i'
       width: `${Math.random() * 3 + 1}px`,
       height: `${Math.random() * 3 + 1}px`,
       top: `${Math.random() * 100}%`,
@@ -199,7 +109,7 @@ function ClientParticleField() {
         animate={{ opacity: 1 }}
         transition={{ duration: 2 }}
       >
-        {[...Array(80)].map((_, i) => (
+        {[...Array(80)].map((_, i: number) => (  // Typed 'i'
           <motion.div
             key={i}
             className="absolute bg-[#1A73E8] rounded-full shadow-[0_0_8px_#1A73E8]"
@@ -242,7 +152,7 @@ function ClientParticleField() {
       animate={{ opacity: 1 }}
       transition={{ duration: 2 }}
     >
-      {particleStyles.map((style, i) => (
+      {particleStyles.map((style: React.CSSProperties, i: number) => (  // Typed 'style' and 'i'
         <motion.div
           key={i}
           className="absolute bg-[#1A73E8] rounded-full shadow-[0_0_8px_#1A73E8]"
@@ -276,7 +186,7 @@ function ClientParticleField() {
 ----------------------------------------*/
 export default function HomePage() {
   useLightFollow()
-    const [cmsData, setCmsData] = useState<any>(null)
+  const [cmsData, setCmsData] = useState<any>(null)
 
   useEffect(() => {
     async function getData() {
@@ -401,20 +311,13 @@ export default function HomePage() {
         }
       `}</style>
 
-      {/* GLOBAL BACKGROUND: lava field visible ACROSS ALL SECTIONS */}
-      <div className="fixed inset-0 -z-20 overflow-hidden">
-        <LavaField />
-        {/* slight veil to keep contrast for text/UI */}
-        <div className="absolute inset-0 bg-[#0A0A0A]/55 backdrop-blur-[1px] mix-blend-screen" />
-      </div>
-
       {/* Floating micro-particles layer */}
       <motion.div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{ opacity: particlesOpacity }}
       >
-        {[...Array(28)].map((_, i) => (
+        {[...Array(28)].map((_, i: number) => (  // Typed 'i'
           <motion.div
             key={i}
             className="absolute bg-[#1A73E8] rounded-full"
@@ -439,88 +342,88 @@ export default function HomePage() {
       {/* Electrically Charged Particle Field - Fixed with client-only random */}
       <ClientParticleField />
 
-{/* ===================== HERO ===================== */}
-<section className="relative flex flex-col items-center justify-center text-center py-32 px-6 z-10">
-  <motion.h1
-    className="text-5xl md:text-7xl font-extrabold max-w-5xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-[#1A73E8] to-[#7E3FF2]"
-    initial={{ opacity: 0, y: 40 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1 }}
-  >
-    {cmsData?.headline || "Outrank Rivals. Own The Search."}
-  </motion.h1>
+      {/* ===================== HERO ===================== */}
+      <section className="relative flex flex-col items-center justify-center text-center py-32 px-6 z-10">
+        <motion.h1
+          className="text-5xl md:text-7xl font-extrabold max-w-5xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-[#1A73E8] to-[#7E3FF2]"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          {cmsData?.headline || "Outrank Rivals. Own The Search."}
+        </motion.h1>
 
-  <motion.p
-    className="text-lg md:text-2xl text-gray-300 max-w-3xl mt-6"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.3, duration: 1 }}
-  >
-    {cmsData?.subheadline || "Turn search into your most profitable channel with Search Rivals. We attract your highest-value customers at the exact moment they’re ready to buy."}
-  </motion.p>
+        <motion.p
+          className="text-lg md:text-2xl text-gray-300 max-w-3xl mt-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 1 }}
+        >
+          {cmsData?.subheadline || "Turn search into your most profitable channel with Search Rivals. We attract your highest-value customers at the exact moment they’re ready to buy."}
+        </motion.p>
 
-  {/* Language Toggle */}
-  <button
-    onClick={() => setIsEnglish(!isEnglish)}
-    className="flex items-center text-gray-400 hover:text-white mt-8"
-  >
-    <Globe className="w-4 h-4 mr-2" /> {isEnglish ? 'Español' : 'English'}
-  </button>
+        {/* Language Toggle */}
+        <button
+          onClick={() => setIsEnglish(!isEnglish)}
+          className="flex items-center text-gray-400 hover:text-white mt-8"
+        >
+          <Globe className="w-4 h-4 mr-2" /> {isEnglish ? 'Español' : 'English'}
+        </button>
 
-  {/* Search Box Animation */}
-  <motion.div
-    className="relative mt-8 w-[90%] max-w-[680px] mx-auto"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.9, delay: 0.3 }}
-  >
-    <div className="relative bg-white/10 backdrop-blur-md border border-[#1A73E8]/30 rounded-full shadow-lg flex items-center px-6 py-4 overflow-hidden">
-      <Search className="w-5 h-5 text-[#B0B0B0] mr-4 flex-shrink-0" strokeWidth={2} />
-      <motion.span
-        className="text-gray-200 text-lg md:text-xl whitespace-nowrap truncate text-left flex-1"
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {typedText}
-        <span className="animate-pulse text-[#1A73E8]">|</span>
-      </motion.span>
-    </div>
-    <div className="absolute inset-0 rounded-full bg-[#1A73E8]/10 blur-3xl opacity-20 pointer-events-none" />
-  </motion.div>
+        {/* Search Box Animation */}
+        <motion.div
+          className="relative mt-8 w-[90%] max-w-[680px] mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.3 }}
+        >
+          <div className="relative bg-white/10 backdrop-blur-md border border-[#1A73E8]/30 rounded-full shadow-lg flex items-center px-6 py-4 overflow-hidden">
+            <Search className="w-5 h-5 text-[#B0B0B0] mr-4 flex-shrink-0" strokeWidth={2} />
+            <motion.span
+              className="text-gray-200 text-lg md:text-xl whitespace-nowrap truncate text-left flex-1"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {typedText}
+              <span className="animate-pulse text-[#1A73E8]">|</span>
+            </motion.span>
+          </div>
+          <div className="absolute inset-0 rounded-full bg-[#1A73E8]/10 blur-3xl opacity-20 pointer-events-none" />
+        </motion.div>
 
-  {/* Primary CTAs */}
-  <motion.div
-    className="mt-12 flex flex-col sm:flex-row gap-6"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.8, duration: 1 }}
-  >
-    <motion.div
-      whileHover={{ scale: 1.08, boxShadow: '0 0 25px #1A73E8' }}
-      transition={{ type: 'spring', stiffness: 200 }}
-    >
-      <Button
-        size="lg"
-        className="bg-[#1A73E8] hover:bg-[#1559b2] text-lg px-10 py-6 rounded-2xl shadow-lg"
-      >
-        {cmsData?.ctaPrimary || "Get Your Free Audit"}
-      </Button>
-    </motion.div>
-    <motion.div
-      whileHover={{ scale: 1.08, boxShadow: '0 0 25px #7E3FF2' }}
-      transition={{ type: 'spring', stiffness: 200 }}
-    >
-      <Button
-        size="lg"
-        variant="outline"
-        className="border-[#7E3FF2] text-[#1A73E8] text-lg px-10 py-6 rounded-2xl"
-      >
-        {cmsData?.ctaSecondary || "See Our Work"}
-      </Button>
-    </motion.div>
-  </motion.div>
-</section>
+        {/* Primary CTAs */}
+        <motion.div
+          className="mt-12 flex flex-col sm:flex-row gap-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 1 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.08, boxShadow: '0 0 25px #1A73E8' }}
+            transition={{ type: 'spring', stiffness: 200 }}
+          >
+            <Button
+              size="lg"
+              className="bg-[#1A73E8] hover:bg-[#1559b2] text-lg px-10 py-6 rounded-2xl shadow-lg"
+            >
+              {cmsData?.ctaPrimary || "Get Your Free Audit"}
+            </Button>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.08, boxShadow: '0 0 25px #7E3FF2' }}
+            transition={{ type: 'spring', stiffness: 200 }}
+          >
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-[#7E3FF2] text-[#1A73E8] text-lg px-10 py-6 rounded-2xl"
+            >
+              {cmsData?.ctaSecondary || "See Our Work"}
+            </Button>
+          </motion.div>
+        </motion.div>
+      </section>
 
 
       {/* ===================== FEATURED ON ===================== */}
@@ -535,15 +438,43 @@ export default function HomePage() {
           transition={{ duration: 45, ease: 'linear', repeat: Infinity }}
         >
           {[
-            '/logos/wsj.png','/logos/washpost.png','/logos/foxnews.png','/logos/reuters.png',
-            '/logos/usnews.png','/logos/huffpost.png','/logos/forbes.png','/logos/usatoday.png','/logos/cnn.png',
-            '/logos/wsj.png','/logos/washpost.png','/logos/foxnews.png','/logos/reuters.png',
-            '/logos/usnews.png','/logos/huffpost.png','/logos/forbes.png','/logos/usatoday.png','/logos/cnn.png',
+            '/assets/brands/featured/monochrome/abc.webp',
+            '/assets/brands/featured/monochrome/affinity-group-publishing.webp',
+            '/assets/brands/featured/monochrome/bing.webp',
+            '/assets/brands/featured/monochrome/cbs.webp',
+            '/assets/brands/featured/monochrome/cw.webp',
+            '/assets/brands/featured/monochrome/einpresswire.webp',
+            '/assets/brands/featured/monochrome/fox.webp',
+            '/assets/brands/featured/monochrome/google.webp',
+            '/assets/brands/featured/monochrome/google-news.webp',
+            '/assets/brands/featured/monochrome/muck-rack.webp',
+            '/assets/brands/featured/monochrome/naviga.webp',
+            '/assets/brands/featured/monochrome/yahoo.webp',
+            // repeated to create continuous loop
+            '/assets/brands/featured/monochrome/abc.webp',
+            '/assets/brands/featured/monochrome/affinity-group-publishing.webp',
+            '/assets/brands/featured/monochrome/bing.webp',
+            '/assets/brands/featured/monochrome/cbs.webp',
+            '/assets/brands/featured/monochrome/cw.webp',
+            '/assets/brands/featured/monochrome/einpresswire.webp',
+            '/assets/brands/featured/monochrome/fox.webp',
+            '/assets/brands/featured/monochrome/google.webp',
+            '/assets/brands/featured/monochrome/google-news.webp',
+            '/assets/brands/featured/monochrome/muck-rack.webp',
+            '/assets/brands/featured/monochrome/naviga.webp',
+            '/assets/brands/featured/monochrome/yahoo.webp',
           ].map((src, i) => (
-            <motion.img key={i} src={src} alt="Featured Logo" className="h-10 md:h-12 object-contain opacity-60 hover:opacity-100 transition" whileHover={{ scale: 1.15 }} />
+            <motion.img
+              key={i}
+              src={src}
+              alt="Featured Publication Logo"
+              className="h-10 md:h-12 object-contain opacity-60 hover:opacity-100 transition"
+              whileHover={{ scale: 1.15 }}
+            />
           ))}
         </motion.div>
       </section>
+
 
       {/* ===================== SERVICES ===================== */}
       <section className="py-24 bg-[#101010] px-8 relative overflow-hidden">
@@ -562,7 +493,7 @@ export default function HomePage() {
               { icon: '/icons/link-pr.svg', title: 'Link Ecosystem & Digital PR', desc: 'Earned links for equity. For national law: +210% traffic.' },
               { icon: '/icons/marketing-automation.svg', title: 'Marketing Automation', desc: 'Nurture workflows for loyalty. For MSP rollups: 99% site health.' },
               { icon: '/icons/cro.svg', title: 'Conversion Rate Optimization (CRO)', desc: 'Data-driven tests for revenue. Across clients: 30-50% lift average.' },
-            ].map((item, i) => (
+            ].map((item, i: number) => (  // Typed 'i'
               <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -637,7 +568,7 @@ export default function HomePage() {
 
       {/* ===================== PROOF CAROUSEL ===================== */}
       <section className="bg-[#0A0A0A] py-28 text-center border-t border-[#1A73E8]/20 overflow-hidden">
-        <h2 className="text-4xl font-bold mb-10">$500M+ Generated for Clients</h2>
+        <h2 className="text-4xl font-bold mb-10">$15M+ Generated for Clients</h2>
         <motion.div className="flex gap-10 w-max mx-auto" animate={{ x: ['0%', '-50%'] }} transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}>
           {[
             { h: 'HVAC Pros', m: '+312% Leads, 45+ Campaigns Executed' },
@@ -646,7 +577,7 @@ export default function HomePage() {
             { h: 'Cyber Client', m: '+140% Conversions, Top 3 in 12 Cities' },
             { h: 'Dental Network', m: 'Top 3 in 12 Cities, 47% Lead Growth' },
             { h: 'MSP Rollup', m: 'Site Health 92% → 99%, 50% Time Savings' },
-          ].map((it, i) => (
+          ].map((it, i: number) => (  // Typed 'i'
             <motion.div key={i} className="bg-[#181818] px-10 py-8 rounded-2xl border border-[#1A73E8]/10 shadow-lg mx-5 min-w-[320px]">
               <p className="text-2xl font-semibold text-[#1A73E8]">{it.h}</p>
               <p className="text-gray-300 text-lg font-bold mt-1">{it.m}</p>
@@ -669,7 +600,7 @@ export default function HomePage() {
             { title: 'Conversion Architecture', desc: 'Every click optimized for revenue. Lift CVR with tested journeys and behavioral data.' },
             { title: 'Performance Automation', desc: 'Real-time shifts trigger fixes, ensuring compounding gains. Monitor SLAs and velocity.' },
             { title: 'Authority Compounding', desc: 'Earned links and PR build trust quarterly. Measure domain scores and correlations.' },
-          ].map((item, i) => (
+          ].map((item, i: number) => (  // Typed 'i'
             <motion.div key={i} whileHover={{ y: -6, scale: 1.03 }} className="p-8 rounded-2xl bg-[#111]/60 border border-[#1A73E8]/20 backdrop-blur-md">
               <h4 className="text-2xl font-semibold text-[#1A73E8] mb-4">{item.title}</h4>
               <p className="text-gray-300 text-base leading-relaxed">{item.desc}</p>
@@ -687,7 +618,7 @@ export default function HomePage() {
             { title: 'AI Automation Core', desc: 'Triggers detect shifts and deploy fixes, saving 50% on manual time. See real-time logs.' },
             { title: 'Data Intelligence Hub', desc: 'Unifies GSC, GA4, and GBP for clear actions. Track MoM trends and ROI.' },
             { title: 'Creative Engine', desc: 'Behavior-driven content that converts. Measure engagement and authority growth.' },
-          ].map((b,i)=>(
+          ].map((b, i: number) => (  // Typed 'i'
             <motion.div key={i} whileHover={{ y:-5, scale:1.02 }} className="p-10 bg-[#111]/80 border border-[#1A73E8]/10 rounded-2xl backdrop-blur-lg text-left">
               <h3 className="text-2xl text-[#1A73E8] font-semibold mb-3">{b.title}</h3>
               <p className="text-gray-300 leading-relaxed">{b.desc}</p>
@@ -704,7 +635,7 @@ export default function HomePage() {
             { title: 'No Guesswork Guarantees', desc: 'Month-to-month contracts with clear SLAs—results or we walk.' },
             { title: 'AI Edge for Scale', desc: 'Proprietary tools compound gains; 97% client retention.' },
             { title: 'Niche Mastery', desc: 'Tailored for legal, HVAC, MSPs, dental, cyber—delivering 30-50% ROI lifts.' },
-          ].map((item, i) => (
+          ].map((item, i: number) => (  // Typed 'i'
             <motion.div key={i} whileHover={{ scale: 1.03 }} className="bg-[#181818] p-8 rounded-2xl border border-[#1A73E8]/10 transition">
               <h3 className="text-xl font-semibold text-[#7E3FF2] mb-2">{item.title}</h3>
               <p className="text-gray-300">{item.desc}</p>
@@ -716,13 +647,13 @@ export default function HomePage() {
       {/* ===================== INSIDE THE ENGINE ===================== */}
       <section className="relative bg-[#050505] py-40 overflow-hidden border-t border-[#1A73E8]/10">
         <motion.div 
-          className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-10"
+          className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"
           animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
           transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
         />
         <div className="max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-24 items-center relative z-10">
           <motion.div initial={{ opacity: 0, x: -60 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="relative">
-            <div className="absolute -inset-10 bg-gradient-to-br from-[#1A73E8]/20 via-[#7E3FF2]/10 to-transparent rounded-3xl blur-2xl" />
+            <div className="absolute -inset-10 bg-gradient-to-br from-[#1A73E8]/20 via-[#7E3FF2]/10 to-transparent blur-2xl" />
             <motion.video
               src="/videos/search-engine.mp4"
               autoPlay muted loop playsInline
@@ -747,31 +678,56 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===================== REAL RESULTS ===================== */}
-      <section className="py-24 bg-[#101010] border-t border-[#1A73E8]/20 px-8 text-center">
-        <h2 className="text-4xl font-bold mb-12">Real Results from Our Partners</h2>
-        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          {[
-            { title: 'Legal Firm SEO', metrics: ['+210% traffic', '+145% conversions', 'Top 3 across 3 metros'], desc: 'Rebuilt digital footprint to dominate high-value keywords.' },
-            { title: 'HVAC Local Growth', metrics: ['+312% leads', '+5 map pack rankings', '47% lead lift in 6 months'], desc: 'Expanded visibility across six service areas.' },
-            { title: 'National eCommerce', metrics: ['+184% revenue', 'Top 3 for 50+ keywords', '30–50% ROI improvement'], desc: 'Built authority and long-term ranking resilience.' },
-          ].map((study, i) => (
-            <motion.div key={i} whileHover={{ scale: 1.03 }} className="bg-[#181818] rounded-2xl p-8 border border-[#1A73E8]/10">
-              <h3 className="text-2xl font-semibold text-[#1A73E8] mb-3">{study.title}</h3>
-              <p className="text-gray-300 mb-4">{study.desc}</p>
-              <ul className="text-gray-400 text-sm">
-                {study.metrics.map((m) => <li key={m}>• {m}</li>)}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+{/* ===================== RESULTS ===================== */}
+<section className="py-24 bg-[#0A0A0A] border-t border-[#1A73E8]/20 text-center px-8 relative overflow-hidden">
+  <motion.div 
+    className="absolute inset-0 bg-gradient-to-r from-[#1A73E8]/10 via-[#7E3FF2]/5 to-transparent opacity-20"
+    animate={{ opacity: [0.2, 0.35, 0.2] }}
+    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+  />
+  
+  <motion.h2
+    className="text-4xl md:text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#1A73E8] to-[#7E3FF2]"
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+  >
+    Results That Speak Louder Than Promises
+  </motion.h2>
+
+  <motion.p
+    className="text-gray-400 max-w-3xl mx-auto mb-12 text-lg leading-relaxed"
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.2, duration: 0.8 }}
+  >
+    We don’t market. We engineer momentum. Every campaign we launch compounds visibility, authority, and conversion power.
+  </motion.p>
+
+  <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {[
+      { stat: '+342%', label: 'Organic Traffic Growth' },
+      { stat: '6x', label: 'Average ROI in 9 Months' },
+      { stat: '92+', label: 'Average Site Health Score' },
+    ].map((item, i: number) => (
+      <motion.div
+        key={i}
+        className="bg-[#181818] p-10 rounded-2xl border border-[#1A73E8]/20 shadow-lg"
+        whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(26,115,232,0.25)' }}
+        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+      >
+        <h3 className="text-5xl font-bold text-[#1A73E8] mb-3">{item.stat}</h3>
+        <p className="text-gray-400 text-lg">{item.label}</p>
+      </motion.div>
+    ))}
+  </div>
+</section>
 
       {/* ===================== POWERED BY ===================== */}
       <section className="py-16 bg-gradient-to-r from-[#111] via-[#1A73E8]/10 to-[#111] text-center">
         <p className="text-gray-400 mb-6 uppercase tracking-widest">Powered By</p>
         <div className="flex flex-wrap justify-center items-center gap-10 opacity-80">
-          {['/logos/semrush.svg','/logos/ahrefs.svg','/logos/ga4.svg','/logos/gsc.svg','/logos/wp.svg'].map((logo,i)=>(
+          {['/logos/semrush.svg','/logos/ahrefs.svg','/logos/ga4.svg','/logos/gsc.svg','/logos/wp.svg'].map((logo,i: number)=>(  // Typed 'i'
             <img key={i} src={logo} alt="Integration Logo" className="h-10 md:h-12 opacity-60 hover:opacity-100 transition" />
           ))}
         </div>
@@ -807,7 +763,7 @@ export default function HomePage() {
             { quote: 'The team feels like an extension of ours. Transparent, fast, and strategic.', name: 'Kevin R.', company: 'eCom Labs' },
             { quote: 'From stagnant to dominant—+184% revenue in 6 months.', name: 'Lisa B.', company: 'Cyber Security Firm' },
             { quote: 'Top 3 rankings in 12 cities; they deliver what others promise.', name: 'Mark D.', company: 'Dental Network' },
-          ].map((t, i) => (
+          ].map((t, i: number) => (  // Typed 'i'
             <motion.div key={i} whileHover={{ scale: 1.03 }} className="bg-[#181818] p-8 rounded-2xl border border-[#1A73E8]/10">
               <p className="text-gray-300 mb-4">“{t.quote}”</p>
               <h4 className="font-semibold text-[#1A73E8]">{t.name}</h4>
@@ -826,7 +782,7 @@ export default function HomePage() {
             { q: 'What niches do you specialize in?', a: 'Legal, HVAC, MSPs, dental, cyber—tailored for U.S. scaleups.' },
             { q: 'Do you offer guarantees?', a: 'Month-to-month with performance SLAs—if we don’t deliver, you walk free.' },
             { q: 'How is your AI different?', a: 'Predictive modeling spots opportunities before competitors react.' },
-          ].map((faq, i) => (
+          ].map((faq, i: number) => (  // Typed 'i'
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.1 }} className="bg-[#181818] p-6 rounded-2xl border border-[#1A73E8]/10">
               <h3 className="text-xl font-semibold text-[#1A73E8] mb-2 flex items-center">
                 <ChevronDown className="w-5 h-5 mr-2" /> {faq.q}
@@ -845,7 +801,7 @@ export default function HomePage() {
             { title: 'AI Search: Future-Proof Your Rankings', excerpt: 'How to dominate generative engines before competitors catch up.' },
             { title: 'Local SEO for Multi-Location Businesses', excerpt: 'Scale map packs and reviews for 7-figure growth.' },
             { title: 'CRO Tactics That Double Conversions', excerpt: 'Data-driven tests for legal and MSP niches.' },
-          ].map((post, i) => (
+          ].map((post, i: number) => (  // Typed 'i'
             <motion.div key={i} whileHover={{ scale: 1.03 }} className="bg-[#181818] rounded-2xl p-6 border border-[#1A73E8]/10">
               <h3 className="text-xl font-semibold text-[#1A73E8] mb-2">{post.title}</h3>
               <p className="text-gray-300 mb-4">{post.excerpt}</p>
@@ -860,7 +816,7 @@ export default function HomePage() {
         <h2 className="text-5xl font-extrabold text-white mb-6">Ready to Outrank Rivals?</h2>
         <p className="text-lg text-white/90 mb-10">Claim your free AI-SEO audit—see gaps holding you back. Limited spots this month.</p>
         <div className="flex flex-col md:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-          <input placeholder="Your website URL" className="bg-white/20 border-white/30 text-white placeholder:text-white/60 flex-1 p-4 rounded-full" />
+          <input placeholder="Your website URL" className="bg-white/10 border-white/30 text-white placeholder:text-white/60 flex-1 p-4 rounded-full" />
           <Button size="lg" className="bg-white text-[#1A73E8] text-lg px-10 py-6 rounded-2xl hover:bg-gray-200">
             Get My Free Audit
           </Button>
