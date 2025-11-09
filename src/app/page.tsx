@@ -426,53 +426,75 @@ export default function HomePage() {
       </section>
 
 
-      {/* ===================== FEATURED ON ===================== */}
-      <section className="relative bg-[#0A0A0A] py-12 border-t border-[#1A73E8]/20 overflow-hidden z-10">
-        <LineDraw className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] opacity-30"
-          path="M 20 100 C 150 0, 650 200, 780 100" width={3} delay={0.1} />
-        <motion.div
-          className="flex items-center gap-12 opacity-80 will-change-transform"
-          style={{ minWidth: '200%' }}
-          initial={{ x: 0 }}
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 45, ease: 'linear', repeat: Infinity }}
-        >
-          {[
-            '/assets/brands/featured/monochrome/abc.webp',
-            '/assets/brands/featured/monochrome/affinity-group-publishing.webp',
-            '/assets/brands/featured/monochrome/bing.webp',
-            '/assets/brands/featured/monochrome/cbs.webp',
-            '/assets/brands/featured/monochrome/cw.webp',
-            '/assets/brands/featured/monochrome/einpresswire.webp',
-            '/assets/brands/featured/monochrome/fox.webp',
-            '/assets/brands/featured/monochrome/google.webp',
-            '/assets/brands/featured/monochrome/google-news.webp',
-            '/assets/brands/featured/monochrome/muck-rack.webp',
-            '/assets/brands/featured/monochrome/naviga.webp',
-            '/assets/brands/featured/monochrome/yahoo.webp',
-            // repeated to create continuous loop
-            '/assets/brands/featured/monochrome/abc.webp',
-            '/assets/brands/featured/monochrome/affinity-group-publishing.webp',
-            '/assets/brands/featured/monochrome/bing.webp',
-            '/assets/brands/featured/monochrome/cbs.webp',
-            '/assets/brands/featured/monochrome/cw.webp',
-            '/assets/brands/featured/monochrome/einpresswire.webp',
-            '/assets/brands/featured/monochrome/fox.webp',
-            '/assets/brands/featured/monochrome/google.webp',
-            '/assets/brands/featured/monochrome/google-news.webp',
-            '/assets/brands/featured/monochrome/muck-rack.webp',
-            '/assets/brands/featured/monochrome/naviga.webp',
-            '/assets/brands/featured/monochrome/yahoo.webp',
-          ].map((src, i) => (
-            <motion.img
-              key={i}
-              src={src}
-              alt="Featured Publication Logo"
-              className="h-10 md:h-12 object-contain opacity-60 hover:opacity-100 transition"
-              whileHover={{ scale: 1.15 }}
-            />
-          ))}
-        </motion.div>
+      {/* ===================== FEATURED ON (Full-Width GitHub Style) ===================== */}
+      <section className="relative bg-[#0A0A0A] py-16 border-t border-[#1A73E8]/20 overflow-hidden z-10 w-full">
+        {/* Subtle gradient band for glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#1A73E8]/8 to-[#7E3FF2]/8 blur-3xl opacity-30 pointer-events-none" />
+
+        {/* Animated decorative line (for brand consistency) */}
+        <LineDraw
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] opacity-20"
+          path="M 20 100 C 150 0, 650 200, 780 100"
+          width={2}
+          delay={0.1}
+        />
+
+        {/* Marquee container - spans full viewport width */}
+        <div className="relative w-screen overflow-hidden">
+          {/* PRO TIP: Duplicated logos for seamless infinite loop */}
+          <motion.div
+            className="flex items-center gap-16 sm:gap-20 will-change-transform px-[10vw]" // adds side padding for better edge spacing
+            style={{ minWidth: '200%' }}
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: 75, ease: 'linear', repeat: Infinity }}
+          >
+            {[
+              '/assets/brands/featured/monochrome/abc.webp',
+              '/assets/brands/featured/monochrome/affinity-group-publishing.webp',
+              '/assets/brands/featured/monochrome/bing.webp',
+              '/assets/brands/featured/monochrome/cbs.webp',
+              '/assets/brands/featured/monochrome/cw.webp',
+              '/assets/brands/featured/monochrome/einpresswire.webp',
+              '/assets/brands/featured/monochrome/fox.webp',
+              '/assets/brands/featured/monochrome/google.webp',
+              '/assets/brands/featured/monochrome/google-news.webp',
+              '/assets/brands/featured/monochrome/muck-rack.webp',
+              '/assets/brands/featured/monochrome/naviga.webp',
+              '/assets/brands/featured/monochrome/yahoo.webp',
+            ]
+              .concat([
+                '/assets/brands/featured/monochrome/abc.webp',
+                '/assets/brands/featured/monochrome/affinity-group-publishing.webp',
+                '/assets/brands/featured/monochrome/bing.webp',
+                '/assets/brands/featured/monochrome/cbs.webp',
+                '/assets/brands/featured/monochrome/cw.webp',
+                '/assets/brands/featured/monochrome/einpresswire.webp',
+                '/assets/brands/featured/monochrome/fox.webp',
+                '/assets/brands/featured/monochrome/google.webp',
+                '/assets/brands/featured/monochrome/google-news.webp',
+                '/assets/brands/featured/monochrome/muck-rack.webp',
+                '/assets/brands/featured/monochrome/naviga.webp',
+                '/assets/brands/featured/monochrome/yahoo.webp',
+              ])
+              .map((src, i) => (
+                <motion.div
+                  key={`${src}-${i}`}
+                  className="shrink-0 flex justify-center items-center"
+                  initial={{ opacity: 0.7 }}
+                  whileHover={{ scale: 1.08, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+                >
+                  <img
+                    src={src}
+                    alt="Featured Logo"
+                    className="h-14 sm:h-16 md:h-20 lg:h-[5.5rem] object-contain grayscale hover:grayscale-0 transition-all duration-500 ease-out brightness-95 hover:brightness-110"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </motion.div>
+              ))}
+          </motion.div>
+        </div>
       </section>
 
 
@@ -484,15 +506,15 @@ export default function HomePage() {
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-10">
             {[
-              { icon: '/icons/seo-automation.svg', title: 'SEO Automation & Site Infrastructure', desc: 'We automate audits and fixes to keep your site rank-ready. For MSPs: Reduced downtime by 92%.' },
-              { icon: '/icons/local-seo.svg', title: 'Local SEO & Geo Ecosystems', desc: 'Dominate maps and listings for walk-ins and calls. For HVAC firms: +312% leads in 6 months.' },
-              { icon: '/icons/ai-optimization.svg', title: 'AI / LLM Search Optimization', desc: 'Entity-rich content for AI visibility. For legal firms: Featured in 50+ snippets.' },
+              { icon: '/icons/seo-automation.svg', title: 'SEO Automation & Site Infrastructure', desc: 'Stop wasting hours fixing site errors manually. We automate audits, repairs, and indexing to keep you ranking nonstop.' },
+              { icon: '/icons/local-seo.svg', title: 'Local SEO & Geo Ecosystems', desc: 'Competitors dominate Google Maps while your leads go elsewhere. We rebuild your Google Business Profile, review velocity, and NAP signals so your brand owns the map pack.' },
+              { icon: '/icons/ai-optimization.svg', title: 'AI / LLM Search Optimization', desc: 'Brands missing from ChatGPT, Gemini, and AI Overviews are losing authority by the day. We engineer schema, entities, and data layers that make AI engines cite you first.' },
               { icon: '/icons/content-systems.svg', title: 'Content Systems & Topical Mapping', desc: 'Intent-aligned clusters for authority. For dental networks: Top 3 in 12 cities.' },
-              { icon: '/icons/branding.svg', title: 'Creative Branding & Positioning', desc: 'Convert-focused identities. For eCom: +184% revenue from trust signals.' },
-              { icon: '/icons/web-design.svg', title: 'SEO-Friendly Web Design', desc: 'Fast sites with schema for conversions. For cyber clients: +140% conversions.' },
+              { icon: '/icons/branding.svg', title: 'Creative Branding & Positioning', desc: 'When audiences can’t tell competitors apart, the cheapest voice wins. We define a category position so clear and confident it commands attention and loyalty.' },
+              { icon: '/icons/web-design.svg', title: 'SEO-Friendly Web Design', desc: 'A beautiful site that doesn’t sell is a liability. We design fast, search-optimized experiences that convert at every scroll and rank across every device.' },
               { icon: '/icons/link-pr.svg', title: 'Link Ecosystem & Digital PR', desc: 'Earned links for equity. For national law: +210% traffic.' },
-              { icon: '/icons/marketing-automation.svg', title: 'Marketing Automation', desc: 'Nurture workflows for loyalty. For MSP rollups: 99% site health.' },
-              { icon: '/icons/cro.svg', title: 'Conversion Rate Optimization (CRO)', desc: 'Data-driven tests for revenue. Across clients: 30-50% lift average.' },
+              { icon: '/icons/marketing-automation.svg', title: 'Marketing Automation', desc: 'Disconnected tools and manual follow-ups bleed revenue. Our automated workflows reactivate dormant leads, capture reviews, and sustain engagement long after the first click.' },
+              { icon: '/icons/cro.svg', title: 'Conversion Rate Optimization (CRO)', desc: 'Friction kills opportunity before sales can begin. We diagnose behavioral drop-offs, run structured tests, and transform underperforming pages into profit centers.' },
             ].map((item, i: number) => (  // Typed 'i'
               <motion.div
                 key={i}
