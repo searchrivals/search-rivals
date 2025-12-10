@@ -80,5 +80,162 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  section,
+  div,
+  img,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  input,
+  textarea,
+  button {
+    min-width: 0;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  .container,
+  .max-w-screen,
+  .max-w-6xl,
+  .mx-auto {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h1,
+  h2,
+  h3 {
+    word-break: break-word;
+  }
+
+  h1 {
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .hero-search {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  footer {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+  }
+
+  @media (min-width: 640px) {
+    footer {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #1A73E8, #7E3FF2);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0A0A;
+  }
+}
+
+/* =====================
+   DROP-DOWN REVEAL ANIMATION (PUNCH STYLE)
+====================== */
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(-50px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-item.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-0  { transition-delay: 0.05s; }
+.reveal-delay-1  { transition-delay: 0.12s; }
+.reveal-delay-2  { transition-delay: 0.18s; }
+.reveal-delay-3  { transition-delay: 0.24s; }
+.reveal-delay-4  { transition-delay: 0.30s; }
+.reveal-delay-5  { transition-delay: 0.36s; }
+.reveal-delay-6  { transition-delay: 0.42s; }
+.reveal-delay-7  { transition-delay: 0.48s; }
+.reveal-delay-8  { transition-delay: 0.54s; }
+.reveal-delay-9  { transition-delay: 0.60s; }
+.reveal-delay-10 { transition-delay: 0.66s; }
+.reveal-delay-11 { transition-delay: 0.72s; }
+.reveal-delay-12 { transition-delay: 0.78s; }
+
+/* =====================
+   SEARCH RIVALS — MARQUEE ANIMATION
+====================== */
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+  display: flex;
+  white-space: nowrap;
+}
+
+.marquee-text {
+  font-size: 1.75rem;
+  font-weight: 600;
+  opacity: 0.85;
+  background: linear-gradient(90deg, #1A73E8, #7E3FF2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 3rem;
+  text-shadow: 0 0 12px rgba(126, 63, 242, 0.45);
+  white-space: nowrap;
 }
