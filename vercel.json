@@ -1,4 +1,3 @@
 {
-  "buildCommand": "pnpm build",
-  "ignoreCommand": "echo 'Skipping Sanity Studio build'"
+  "buildCommand": "pnpm build"
 }
