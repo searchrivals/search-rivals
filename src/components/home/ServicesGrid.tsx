@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import TiltCard from "@/components/ui/TiltCard";
 import { Icon } from "@iconify/react";
 
@@ -53,8 +53,10 @@ const services = [
   },
 ];
 
-// ====== WOW ANIMATION VARIANTS ======
-const cardVariants = {
+// ======================
+// FIXED VARIANTS (TYPED)
+// ======================
+const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.85,
@@ -69,7 +71,7 @@ const cardVariants = {
     transition: {
       delay: i * 0.15,
       duration: 0.75,
-      ease: [0.16, 1, 0.3, 1],
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // <-- FIX
     },
   }),
   exit: {
@@ -85,12 +87,10 @@ export default function ServicesGrid() {
   return (
     <section className="relative py-28 bg-[#101010] overflow-hidden">
 
-      {/* Soft Glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1A73E8]/10 via-transparent to-[#7E3FF2]/10 blur-3xl opacity-30" />
 
       <div className="relative max-w-7xl mx-auto px-8 text-center">
 
-        {/* Header */}
         <motion.h2
           className="text-4xl md:text-5xl font-extrabold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-[#1A73E8] to-[#7E3FF2]"
           initial={{ opacity: 0, y: 40 }}
@@ -101,7 +101,6 @@ export default function ServicesGrid() {
           How We Help Brands Win The Search
         </motion.h2>
 
-        {/* GRID */}
         <div className="grid md:grid-cols-3 gap-12">
           {services.map((s, i) => (
             <motion.div
@@ -114,7 +113,7 @@ export default function ServicesGrid() {
               viewport={{ once: false, amount: 0.35 }}
               className="relative"
             >
-              {/* Signal Pulse */}
+
               <motion.div
                 className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#1A73E8]/40 to-[#7E3FF2]/40 blur-2xl opacity-0"
                 initial={{ opacity: 0, scale: 0.6 }}
@@ -131,21 +130,17 @@ export default function ServicesGrid() {
 
               <TiltCard className="group bg-[#181818]/80 border border-[#1A73E8]/10 p-10 rounded-2xl shadow-xl backdrop-blur-sm relative overflow-hidden text-center flex flex-col items-center">
 
-                {/* Hover Glow */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 bg-gradient-to-br from-[#1A73E8] to-[#7E3FF2] blur-2xl" />
 
-                {/* Icon */}
                 <Icon
                   icon={s.icon}
                   className="text-[#1A73E8] mb-6 w-14 h-14 transition-transform duration-300 group-hover:scale-110"
                 />
 
-                {/* Title */}
                 <h3 className="text-2xl font-semibold text-white mb-4 group-hover:text-[#1A73E8] transition-colors">
                   {s.title}
                 </h3>
 
-                {/* Description */}
                 <p className="text-gray-300 leading-relaxed">
                   {s.desc}
                 </p>

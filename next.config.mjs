@@ -5,9 +5,14 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   output: 'standalone',
+
+  // ----- FIX: DISABLE typedRoutes -----
+  typedRoutes: false,
   experimental: {
-    typedRoutes: true
+    typedRoutes: false,
   },
+  // -------------------------------------
+
   async redirects() {
     return [
       {
@@ -17,8 +22,8 @@ const nextConfig = {
       },
     ];
   },
+
   webpack: (config, { isServer }) => {
-    // Skip building Sanity Studio in production
     if (isServer) {
       config.externals.push({
         '@sanity/vision': 'commonjs @sanity/vision',
@@ -26,12 +31,9 @@ const nextConfig = {
       });
     }
 
-    // Ignore anything in /studio during build
     config.module.rules.push({
       test: /studio/,
-      use: {
-        loader: 'ignore-loader'
-      }
+      use: { loader: 'ignore-loader' }
     });
 
     return config;

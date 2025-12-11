@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 
 export default function FooterV0() {
   return (
@@ -19,10 +20,11 @@ export default function FooterV0() {
           </p>
         </div>
 
+        {/* FIXED LINKS WITH typedRoutes */}
         <div className="flex flex-col md:items-end space-y-2 text-sm text-gray-300">
-          <Link href="/contact" className="hover:text-white transition">Contact</Link>
-          <Link href="/services" className="hover:text-white transition">Services</Link>
-          <Link href="/about" className="hover:text-white transition">About Us</Link>
+          <Link href={"/contact" as Route} className="hover:text-white transition">Contact</Link>
+          <Link href={"/services" as Route} className="hover:text-white transition">Services</Link>
+          <Link href={"/about" as Route} className="hover:text-white transition">About Us</Link>
         </div>
       </div>
 
@@ -54,14 +56,18 @@ export default function FooterV0() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400 pb-10 border-t border-white/10 pt-10">
         <div>
           Primary Business Address Here<br />
-          <Link href="/" className="text-blue-400 hover:underline">Directions</Link>
+          <Link href={"/" as Route} className="text-blue-400 hover:underline">Directions</Link>
         </div>
         <div className="md:text-center">
           +1 702-418-XXXX<br />
-          <Link href="mailto:info@searchrivals.com" className="text-blue-400 hover:underline">info@searchrivals.com</Link>
+          <Link href="mailto:info@searchrivals.com" className="text-blue-400 hover:underline">
+            info@searchrivals.com
+          </Link>
         </div>
         <div className="md:text-right">
-          <Link href="mailto:support@searchrivals.com" className="text-blue-400 hover:underline">support@searchrivals.com</Link>
+          <Link href="mailto:support@searchrivals.com" className="text-blue-400 hover:underline">
+            support@searchrivals.com
+          </Link>
         </div>
       </div>
 
@@ -69,28 +75,26 @@ export default function FooterV0() {
       {/* Legal + Awards              */}
       {/* --------------------------- */}
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between text-xs text-gray-500 pt-8 border-t border-white/10">
-
         <div className="space-x-3 pb-4 md:pb-0">
           <span>© Copyright 2025 Search Rivals Marketing, LLC</span>
           <span>| Founded 2025</span>
         </div>
 
         <div className="flex space-x-4 pb-4 md:pb-0">
-          {/* placeholder for award icons */}
           <div className="w-10 h-10 bg-white/5 rounded"></div>
           <div className="w-10 h-10 bg-white/5 rounded"></div>
           <div className="w-10 h-10 bg-white/5 rounded"></div>
         </div>
 
         <div className="space-x-3">
-          <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
+          <Link href={"/privacy" as Route} className="hover:text-white">Privacy Policy</Link>
           <span>|</span>
-          <Link href="/sitemap" className="hover:text-white">Sitemap</Link>
+          <Link href={"/sitemap" as Route} className="hover:text-white">Sitemap</Link>
         </div>
       </div>
 
       {/* --------------------------- */}
-      {/* Scrolling Tagline (v1 gets animation) */}
+      {/* Scrolling Tagline           */}
       {/* --------------------------- */}
       <div className="w-full border-t border-white/10 mt-12 pt-6 pb-4 text-center text-lg font-semibold opacity-60">
         Outrank Rivals. Own the Search.
