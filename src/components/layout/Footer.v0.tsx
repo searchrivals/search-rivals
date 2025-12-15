@@ -1,127 +1,215 @@
-"use client";
+'use client'
 
-import Link from "next/link";
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Mail, MapPin, Linkedin, ArrowUpRight } from 'lucide-react'
+
+type FooterLink = { label: string; href: string }
+type FooterGroup = { title: string; links: FooterLink[] }
+
+const GROUPS: FooterGroup[] = [
+  {
+    title: 'Company',
+    links: [
+      { label: 'Company', href: '/company' },
+      { label: 'Services', href: '/services' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
+  {
+    title: 'Services',
+    links: [
+      { label: 'AI SEO', href: '/services' },
+      { label: 'Local Visibility', href: '/services' },
+      { label: 'Competitive Intelligence', href: '/services' },
+      { label: 'Website + Conversion', href: '/services' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Blog', href: '/blog' },
+      { label: 'Case Studies', href: '/case-studies' },
+      { label: 'Free Audit', href: '/contact' },
+    ],
+  },
+]
+
+const LOCATIONS = [
+  { code: 'LV', city: 'Las Vegas, NV (HQ)' },
+  { code: 'CO', city: 'Denver, CO' },
+  { code: 'TX', city: 'Austin, TX' },
+]
 
 export default function FooterV0() {
   return (
-    <footer className="w-full bg-black text-white border-t border-white/10 pt-16 pb-14 px-6 md:px-12 lg:px-20">
+    <footer className="relative w-full border-t border-white/10 bg-black">
+      {/* Subtle top glow */}
+      <div className="pointer-events-none absolute inset-x-0 -top-24 h-24 bg-gradient-to-b from-blue-500/15 to-transparent blur-2xl" />
 
-      {/* -------------------------------------------------- */}
-      {/* SECTION: BRAND + MISSION */}
-      {/* -------------------------------------------------- */}
-      <div className="max-w-6xl mx-auto text-center md:text-left pb-12">
-        <h2 className="text-2xl font-semibold mb-3 tracking-tight">Search Rivals</h2>
-        <p className="text-sm text-gray-400 leading-relaxed max-w-md mx-auto md:mx-0">
-          Search Rivals is the AI SEO Agency built for modern search. 
-          We help brands outperform rivals, maximize visibility, and turn 
-          search demand into revenue that compounds.
-        </p>
-      </div>
+      <div className="mx-auto w-full max-w-6xl px-5 pb-10 pt-10">
+        {/* CTA panel */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.45 }}
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-white/[0.02] p-5"
+        >
+          <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
+          <div className="pointer-events-none absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-purple-500/20 blur-3xl" />
 
-      <div className="w-full border-t border-white/10 my-10" />
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-xl">
+              <h3 className="text-balance text-xl font-semibold text-white">
+                Ready To Outrank Your Rivals?
+              </h3>
+              <p className="mt-1 text-sm leading-relaxed text-white/70">
+                Get a fast, clear visibility audit and a prioritized roadmap. No fluff.
+              </p>
+            </div>
 
-      {/* -------------------------------------------------- */}
-      {/* SECTION: QUICK LINKS (STACKED ON MOBILE) */}
-      {/* -------------------------------------------------- */}
-      <div className="max-w-6xl mx-auto flex flex-col space-y-4 text-center text-gray-300 text-base pb-12">
-        <Link href="/contact" className="hover:text-white transition">Contact</Link>
-        <Link href="/services" className="hover:text-white transition">Services</Link>
-        <Link href="/about" className="hover:text-white transition">About Us</Link>
-      </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button asChild className="rounded-full px-5">
+                <Link href="/contact">
+                  Get Free Audit <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
 
-      <div className="w-full border-t border-white/10 my-10" />
-
-      {/* -------------------------------------------------- */}
-      {/* SECTION: INDUSTRIES (STACK WRAP) */}
-      {/* -------------------------------------------------- */}
-      <div className="max-w-6xl mx-auto flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-400 justify-center md:justify-start pb-12">
-        {[
-          "Healthcare Marketing","Insurance Marketing","Law Firm SEO","Content Marketing",
-          "Local SEO","Multilocation SEO","Omnichannel Marketing","Performance Marketing",
-          "Full-Service Marketing","vCMO Services","Finance","Private Equity","SaaS","Start-Ups"
-        ].map((i) => (
-          <span key={i} className="whitespace-nowrap">{i}</span>
-        ))}
-      </div>
-
-      <div className="w-full border-t border-white/10 my-10" />
-
-      {/* -------------------------------------------------- */}
-      {/* SECTION: LOCATIONS — PUNCH MOBILE STYLE */}
-      {/* -------------------------------------------------- */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-10 text-center pb-12">
-        {[
-          { abbr: "LV", city: "Las Vegas, NV (HQ)" },
-          { abbr: "CO", city: "Denver, CO" },
-          { abbr: "CHI", city: "Chicago, IL" },
-          { abbr: "TX", city: "Dallas, TX" },
-          { abbr: "NYC", city: "NYC Metro" }
-        ].map((loc) => (
-          <div key={loc.abbr}>
-            <p className="text-2xl font-semibold tracking-tight">{loc.abbr}</p>
-            <p className="text-sm text-gray-400 mt-1">{loc.city}</p>
+              <Button asChild variant="outline" className="rounded-full border-white/15 bg-transparent px-5 text-white hover:bg-white/5">
+                <Link href="/services">View Services</Link>
+              </Button>
+            </div>
           </div>
-        ))}
-      </div>
+        </motion.div>
 
-      <div className="w-full border-t border-white/10 my-10" />
+        {/* Locations (mobile: horizontal scroll / desktop: grid) */}
+        <div className="mt-7">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-white/80">Locations</p>
+            <span className="text-xs text-white/45">Remote Friendly</span>
+          </div>
 
-      {/* -------------------------------------------------- */}
-      {/* SECTION: CONTACT INFORMATION (STACKED) */}
-      {/* -------------------------------------------------- */}
-      <div className="max-w-6xl mx-auto text-center space-y-6 text-sm text-gray-400 pb-12">
-
-        <div>
-          Search Rivals LLC<br />
-          4201 W Rochelle Ave<br />
-          Las Vegas, NV 89103<br />
-          United States<br />
-          <Link href="/" className="text-blue-400 hover:underline">Directions</Link>
+          <div className="mt-3 -mx-5 flex gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
+            {LOCATIONS.map((l) => (
+              <div
+                key={l.code}
+                className="min-w-[240px] flex-1 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:min-w-0"
+              >
+                <div className="text-4xl font-semibold tracking-tight text-white">{l.code}</div>
+                <div className="mt-1 text-xs uppercase tracking-wider text-white/55">{l.city}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div>
-          <a href="tel:+17024185481" className="block hover:text-white">+1 (702) 418-5481</a>
-          <Link href="mailto:info@searchrivals.com" className="text-blue-400 hover:underline block">
-            info@searchrivals.com
-          </Link>
-          <Link href="mailto:support@searchrivals.com" className="text-blue-400 hover:underline block">
-            support@searchrivals.com
-          </Link>
+        {/* Nav groups (mobile: accordions / desktop: columns) */}
+        <div className="mt-8 grid gap-6 sm:grid-cols-4">
+          {/* Brand block */}
+          <div className="sm:col-span-1">
+            <div className="text-lg font-semibold text-white">
+              Search <span className="text-blue-500">Rivals</span>
+            </div>
+            <p className="mt-2 text-sm leading-relaxed text-white/65">
+              Manage visibility across search, AI answers, maps, reviews, and social discovery.
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="mailto:hello@searchrivals.com"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/80 hover:bg-white/5"
+              >
+                <Mail className="h-4 w-4" />
+                hello@searchrivals.com
+              </a>
+
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/80 hover:bg-white/5"
+              >
+                <MapPin className="h-4 w-4" />
+                Contact
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop columns */}
+          <div className="hidden gap-6 sm:col-span-3 sm:grid sm:grid-cols-3">
+            {GROUPS.map((g) => (
+              <div key={g.title}>
+                <p className="text-sm font-medium text-white/85">{g.title}</p>
+                <ul className="mt-3 space-y-2">
+                  {g.links.map((lnk) => (
+                    <li key={lnk.label}>
+                      <Link
+                        href={lnk.href}
+                        className="text-sm text-white/65 hover:text-white"
+                      >
+                        {lnk.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile accordions */}
+          <div className="sm:hidden">
+            <div className="space-y-2">
+              {GROUPS.map((g) => (
+                <details
+                  key={g.title}
+                  className="group rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+                >
+                  <summary className="cursor-pointer list-none text-sm font-medium text-white/85">
+                    {g.title}
+                    <span className="float-right text-white/40 group-open:rotate-180">⌄</span>
+                  </summary>
+                  <ul className="mt-3 space-y-2">
+                    {g.links.map((lnk) => (
+                      <li key={lnk.label}>
+                        <Link
+                          href={lnk.href}
+                          className="text-sm text-white/65 hover:text-white"
+                        >
+                          {lnk.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Social placeholders */}
-        <div className="flex justify-center space-x-4 pt-4">
-          <div className="w-10 h-10 bg-white/5 rounded" />
-          <div className="w-10 h-10 bg-white/5 rounded" />
-          <div className="w-10 h-10 bg-white/5 rounded" />
+        {/* Bottom bar */}
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-white/45">
+            © {new Date().getFullYear()} Search Rivals. All rights reserved.
+          </p>
+
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="text-xs text-white/45 hover:text-white/80">
+              Privacy
+            </Link>
+            <Link href="/terms" className="text-xs text-white/45 hover:text-white/80">
+              Terms
+            </Link>
+            <a
+              href="https://www.linkedin.com"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-xs text-white/45 hover:text-white/80"
+            >
+              <Linkedin className="h-4 w-4" />
+              LinkedIn
+            </a>
+          </div>
         </div>
-
-      </div>
-
-      <div className="w-full border-t border-white/10 my-10" />
-
-      {/* -------------------------------------------------- */}
-      {/* SECTION: LEGAL + YEAR + LINKS */}
-      {/* -------------------------------------------------- */}
-      <div className="max-w-6xl mx-auto flex flex-col items-center space-y-3 text-xs text-gray-500">
-
-        <div className="text-center">
-          © Copyright 2025 Search Rivals Marketing, LLC<br />
-          Founded 2025
-        </div>
-
-        <div className="flex space-x-4 pt-1">
-          <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
-          <span>|</span>
-          <Link href="/sitemap" className="hover:text-white">Sitemap</Link>
-        </div>
-
-      </div>
-
-      {/* Tagline */}
-      <div className="w-full border-t border-white/10 mt-12 pt-6 pb-4 text-center text-lg font-semibold opacity-60">
-        Outrank Rivals. Own the Search.
       </div>
     </footer>
-  );
+  )
 }
