@@ -135,10 +135,7 @@ export default function SRMobileCopilot() {
 
               <ul className="space-y-2.5">
                 {current.bullets.map((b, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-sm text-gray-300"
-                  >
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
                     <span className="mt-[3px]">
                       <ArrowUpCircle className="w-3.5 h-3.5 text-[#1A73E8]" />
                     </span>
