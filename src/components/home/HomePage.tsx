@@ -27,7 +27,6 @@ import ConclusionCTA from "./ConclusionCTA";
 export default function HomePage() {
   return (
     <main className="w-full min-h-screen bg-[#0A0A0A] text-white overflow-x-hidden">
-
       {/* 1. HERO SECTION */}
       <HeroSection />
 
@@ -66,7 +65,6 @@ export default function HomePage() {
 
       {/* 13. HOMEPAGE CONCLUSION CTA */}
       <ConclusionCTA />
-
     </main>
   );
 }

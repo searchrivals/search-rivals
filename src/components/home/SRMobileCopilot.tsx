@@ -5,9 +5,6 @@ import { motion } from "framer-motion";
 import { ArrowUpCircle } from "lucide-react";
 
 export default function SRMobileCopilot() {
-  // ------------------------------------------------------
-  //  THREE PROMPTS + CARDS (UPDATED)
-  // ------------------------------------------------------
   const steps = [
     {
       prompt: "How do we get our business to rank in search and AI?",
@@ -43,7 +40,6 @@ export default function SRMobileCopilot() {
 
   const current = steps[step];
 
-  // Auto-advance until user interacts
   useEffect(() => {
     if (!autoPlay) return;
     const timer = setTimeout(() => {
@@ -59,9 +55,7 @@ export default function SRMobileCopilot() {
 
   return (
     <div className="relative w-full flex justify-center lg:justify-start mt-10">
-      {/* OUTER DEVICE SHADOW / FRAME */}
       <div className="rounded-[2.25rem] p-[6px] bg-gradient-to-br from-[#1A73E8]/40 via-[#111111] to-[#7E3FF2]/40 shadow-[0_0_80px_-20px_rgba(26,115,232,0.7)]">
-        {/* MOBILE DEVICE WRAPPER */}
         <motion.div
           key={step}
           initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -75,7 +69,6 @@ export default function SRMobileCopilot() {
             overflow-hidden
           "
         >
-          {/* TOP NOTCH / STATUS BAR */}
           <div className="relative pt-3 pb-2 bg-[#050509] border-b border-white/10">
             <div className="mx-auto h-5 w-40 rounded-full bg-[#101014] flex items-center justify-between px-4 text-[10px] text-gray-400">
               <span>9:41</span>
@@ -85,12 +78,13 @@ export default function SRMobileCopilot() {
               </span>
             </div>
             <div className="mt-2 flex justify-between px-4 text-[11px] text-gray-400">
-              <span className="font-medium text-gray-300">SR • Visibility Copilot</span>
+              <span className="font-medium text-gray-300">
+                SR • Visibility Copilot
+              </span>
               <span>Secure • Live</span>
             </div>
           </div>
 
-          {/* PROMPT BUBBLE */}
           <div className="px-4 pt-5">
             <motion.div
               key={current.prompt}
@@ -114,7 +108,6 @@ export default function SRMobileCopilot() {
             </motion.div>
           </div>
 
-          {/* RESPONSE CARD */}
           <div className="px-4 pt-4 pb-6">
             <motion.div
               key={current.header}
@@ -135,7 +128,10 @@ export default function SRMobileCopilot() {
 
               <ul className="space-y-2.5">
                 {current.bullets.map((b, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                  <li
+                    key={i}
+                    className="flex items-start gap-2 text-sm text-gray-300"
+                  >
                     <span className="mt-[3px]">
                       <ArrowUpCircle className="w-3.5 h-3.5 text-[#1A73E8]" />
                     </span>
@@ -146,14 +142,12 @@ export default function SRMobileCopilot() {
             </motion.div>
           </div>
 
-          {/* INPUT BAR */}
           <div className="px-4 pb-4">
             <div className="flex items-center bg-[#101018] border border-white/12 rounded-full px-4 py-3">
               <span className="text-gray-500 text-sm flex-1">
                 Ask how to grow with search…
               </span>
 
-              {/* NEXT BUTTON — MANUAL + DISABLE AUTOPLAY */}
               <button
                 onClick={nextStep}
                 className="

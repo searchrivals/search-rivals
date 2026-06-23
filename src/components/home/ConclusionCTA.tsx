@@ -2,125 +2,80 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import CEOContactCTA from "../forms/CEOContactCTA";
 
 export default function ConclusionCTA() {
-  const ref = useRef(null);
-  const inView = useInView(ref, {
-    amount: 0.35,
-    once: true,
-  });
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { amount: 0.2, once: true });
 
   return (
     <motion.section
       ref={ref}
-      className="relative w-full py-16 bg-[#0B0B0B] text-white border-t border-white/10 overflow-hidden"
-      initial={{ opacity: 0, y: 60 }}
+      id="audit"
+      className="relative w-full py-20 bg-[#0B0B0B] text-white border-t border-white/10 overflow-hidden"
+      initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* SCANLINE MATERIALIZATION */}
-      <motion.div
-        initial={{ height: "0%", opacity: 0.9 }}
-        animate={inView ? { height: "100%", opacity: 0 } : {}}
-        transition={{
-          duration: 1.25,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="absolute inset-0 bg-gradient-to-b from-[#1A73E8]/40 via-[#7E3FF2]/40 to-transparent pointer-events-none"
-        style={{
-          maskImage:
-            "linear-gradient(to bottom, white 0%, white 60%, transparent 100%)",
-        }}
-      />
+      <div className="relative max-w-6xl mx-auto px-6">
+        {/* KEY FIX: items-start keeps both columns aligned at the top */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          
+          {/* LEFT COPY */}
+          <div className="max-w-xl">
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
+              <span className="text-[#1A73E8]">Win More Customers</span>
+              <br />
+              <span className="text-[#7E3FF2]">Across Every Search</span>
+            </h2>
 
-      {/* HOLOGRAPHIC LEFT/RIGHT EXPANSION */}
-      <motion.div
-        initial={{ scaleX: 0.35, opacity: 0.25 }}
-        animate={inView ? { scaleX: 1, opacity: 0 } : {}}
-        transition={{
-          duration: 1.15,
-          delay: 0.15,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="absolute inset-0 bg-gradient-to-r from-[#1A73E8]/50 via-[#7E3FF2]/40 to-transparent pointer-events-none"
-        style={{
-          transformOrigin: "center",
-          maskImage:
-            "linear-gradient(to right, transparent 0%, white 40%, white 60%, transparent 100%)",
-        }}
-      />
+            <p className="mt-5 text-white/70 text-sm md:text-base leading-relaxed">
+              Buyers move fast across AI answers, search results, reviews, maps, and social.
+              You win when your brand shows up first and looks like the obvious best choice.
+              Search Rivals makes that happen.
+            </p>
 
-      {/* DIGITAL SHIMMER */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: [0, 0.3, 0] } : {}}
-        transition={{
-          duration: 0.65,
-          delay: 0.4,
-          ease: "easeInOut",
-        }}
-        className="absolute inset-0 bg-[url('/noise.png')] opacity-30 mix-blend-soft-light pointer-events-none"
-      />
+            <div className="mt-8 space-y-6">
+              <div>
+                <h3 className="text-[#1A73E8] font-semibold">
+                  Real-Time Search Intelligence
+                </h3>
+                <p className="mt-2 text-white/60 text-sm leading-relaxed">
+                  We track how buyers find you across search, AI answers, maps, and reviews
+                  and act before shifts reduce visibility or revenue.
+                </p>
+              </div>
 
-      {/* GLOW BLOOMS */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.82 }}
-        animate={inView ? { opacity: 0.55, scale: 1.3 } : {}}
-        transition={{
-          duration: 1.4,
-          delay: 0.2,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="absolute inset-0 mx-auto my-auto w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#1A73E8]/40 via-[#7E3FF2]/30 to-transparent blur-[130px]"
-      />
+              <div>
+                <h3 className="text-[#1A73E8] font-semibold">
+                  Turn Your Website Into Your Strongest Asset
+                </h3>
+                <p className="mt-2 text-white/60 text-sm leading-relaxed">
+                  World-class design optimized for search so your site earns trust,
+                  ranks with authority, and converts demand immediately.
+                </p>
+              </div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.7 }}
-        animate={inView ? { opacity: 0.35, scale: 1.1 } : {}}
-        transition={{
-          duration: 1.3,
-          delay: 0.3,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="absolute inset-0 w-[420px] h-[420px] mx-auto my-auto rounded-full bg-gradient-to-br from-[#1A73E8]/60 via-[#7E3FF2]/60 to-transparent blur-[90px]"
-      />
+              <div>
+                <h3 className="text-[#1A73E8] font-semibold">
+                  Senior Operators on Every Account
+                </h3>
+                <p className="mt-2 text-white/60 text-sm leading-relaxed">
+                  No juniors. No outsourcing. You work directly with the experts who
+                  built the system and understand high-stakes growth.
+                </p>
+              </div>
+            </div>
+          </div>
 
-      {/* CONTENT */}
-      <motion.div
-        initial={{ opacity: 0, y: 22 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9, delay: 0.4 }}
-        className="relative max-w-6xl mx-auto px-6 text-center space-y-8"
-      >
-        <motion.h2
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.85, delay: 0.5 }}
-          className="text-4xl md:text-5xl font-semibold tracking-tight"
-        >
-          Ready to Outrank Every Competitor in Your Space?
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.65 }}
-          className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto"
-        >
-          Your competitors aren’t slowing down and the AI-First Web is evolving fast.
-          Let’s build the system that puts you permanently ahead.
-        </motion.p>
-
-        <motion.a
-          href="#audit"
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.75, delay: 0.75 }}
-          className="inline-block mt-6 px-10 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all font-medium text-lg shadow-[0_0_25px_rgba(26,115,232,0.45)] hover:shadow-[0_0_35px_rgba(26,115,232,0.65)]"
-        >
-          Get Your Free 90-Day Visibility Audit
-        </motion.a>
-      </motion.div>
+          {/* RIGHT FORM — NOW PERFECTLY ALIGNED */}
+          <div className="flex justify-center lg:justify-end mt-10 lg:mt-0">
+            <div className="w-full max-w-[460px]">
+              <CEOContactCTA />
+            </div>
+          </div>
+        </div>
+      </div>
     </motion.section>
   );
 }
