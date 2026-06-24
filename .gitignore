@@ -33,7 +33,8 @@ yarn-error.log*
 # env files (critical — never commit secrets)
 .env
 .env.*
-!.env.example   # Allow a sample file for reference only
+# Allow a sample file for reference only
+!.env.example
 
 # vercel
 .vercel
