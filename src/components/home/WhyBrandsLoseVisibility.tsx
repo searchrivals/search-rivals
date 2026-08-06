@@ -297,7 +297,7 @@ function VisibilityVisual({ activeId }: { activeId: string }) {
                   "Monitoring only via monthly reports",
                   "Slow responses to AI / SERP changes",
                   "Fragmented ownership across teams",
-                ].map((item, idx) => (
+                ].map((item) => (
                   <div key={item} className="flex items-start gap-2 text-[11px] text-gray-200">
                     <span className="mt-[3px] h-2 w-2 rounded-full bg-red-400/80" />
                     <span>{item}</span>

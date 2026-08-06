@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import LineDraw from "./LineDraw";
 
@@ -51,10 +52,12 @@ export default function FeaturedOn() {
               whileHover={{ scale: 1.08, opacity: 1 }}
               transition={{ type: "spring", stiffness: 220, damping: 20 }}
             >
-              <img
+              <Image
                 src={src}
                 alt="Featured Logo"
-                className="h-14 sm:h-16 md:h-20 lg:h-[5.5rem] object-contain grayscale hover:grayscale-0 transition-all duration-500 brightness-95 hover:brightness-110"
+                width={220}
+                height={88}
+                className="h-14 w-auto object-contain grayscale transition-all duration-500 brightness-95 hover:grayscale-0 hover:brightness-110 sm:h-16 md:h-20 lg:h-[5.5rem]"
               />
             </motion.div>
           ))}
@@ -68,10 +71,12 @@ export default function FeaturedOn() {
               whileHover={{ scale: 1.08, opacity: 1 }}
               transition={{ type: "spring", stiffness: 220, damping: 20 }}
             >
-              <img
+              <Image
                 src={src}
                 alt="Featured Logo"
-                className="h-14 sm:h-16 md:h-20 lg:h-[5.5rem] object-contain grayscale hover:grayscale-0 transition-all duration-500 brightness-95 hover:brightness-110"
+                width={220}
+                height={88}
+                className="h-14 w-auto object-contain grayscale transition-all duration-500 brightness-95 hover:grayscale-0 hover:brightness-110 sm:h-16 md:h-20 lg:h-[5.5rem]"
               />
             </motion.div>
           ))}
