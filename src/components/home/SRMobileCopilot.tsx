@@ -4,53 +4,53 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpCircle } from "lucide-react";
 
-export default function SRMobileCopilot() {
-  const steps = [
-    {
-      prompt: "How do we get our business to rank in search and AI?",
-      header: "Elevate Your Visibility Across Every Search Channel",
-      bullets: [
-        "Reach qualified buyers consistently across search, AI answers, maps, and reviews.",
-        "Convert fragmented visibility into a predictable acquisition engine you can scale.",
-        "Stop guessing where customers come from and create predictable growth.",
-      ],
-    },
-    {
-      prompt: "How do we make buyers choose us over competitors?",
-      header: "Make Your Brand The Obvious Best Choice",
-      bullets: [
-        "Build trust signals your competitors can't match.",
-        "Show up higher, more authoritative, and appear more trustworthy everywhere buyers look.",
-        "Strengthen your conversion paths so more clicks turn into customers.",
-      ],
-    },
-    {
-      prompt: "How do we increase visibility and revenue from search?",
-      header: "A Predictable Flow of New Customers and Revenue",
-      bullets: [
-        "Turn modern search into a reliable pipeline of high-intent demand.",
-        "Unify search, AI, maps, reviews, and social into one acquisition system.",
-        "Give your leadership a forecastable, scalable growth engine.",
-      ],
-    },
-  ];
+const STEPS = [
+  {
+    prompt: "How do we get our business to rank in search and AI?",
+    header: "Elevate Your Visibility Across Every Search Channel",
+    bullets: [
+      "Reach qualified buyers consistently across search, AI answers, maps, and reviews.",
+      "Convert fragmented visibility into a predictable acquisition engine you can scale.",
+      "Stop guessing where customers come from and create predictable growth.",
+    ],
+  },
+  {
+    prompt: "How do we make buyers choose us over competitors?",
+    header: "Make Your Brand The Obvious Best Choice",
+    bullets: [
+      "Build trust signals your competitors can't match.",
+      "Show up higher, more authoritative, and appear more trustworthy everywhere buyers look.",
+      "Strengthen your conversion paths so more clicks turn into customers.",
+    ],
+  },
+  {
+    prompt: "How do we increase visibility and revenue from search?",
+    header: "A Predictable Flow of New Customers and Revenue",
+    bullets: [
+      "Turn modern search into a reliable pipeline of high-intent demand.",
+      "Unify search, AI, maps, reviews, and social into one acquisition system.",
+      "Give your leadership a forecastable, scalable growth engine.",
+    ],
+  },
+];
 
+export default function SRMobileCopilot() {
   const [step, setStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
 
-  const current = steps[step];
+  const current = STEPS[step];
 
   useEffect(() => {
     if (!autoPlay) return;
     const timer = setTimeout(() => {
-      setStep((prev) => (prev + 1) % steps.length);
+      setStep((prev) => (prev + 1) % STEPS.length);
     }, 7000);
     return () => clearTimeout(timer);
   }, [step, autoPlay]);
 
   const nextStep = () => {
     setAutoPlay(false);
-    setStep((prev) => (prev + 1) % steps.length);
+    setStep((prev) => (prev + 1) % STEPS.length);
   };
 
   return (

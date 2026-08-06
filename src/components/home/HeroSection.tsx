@@ -18,24 +18,24 @@ const PARTICLES = [
   { top: "68%", left: "36%", size: 4 },
 ];
 
+const PROMPTS = [
+  "How do I get my business higher on Google?",
+  "How do I rank higher in AI search results?",
+  "How do I rank higher on Google Maps?",
+  "Why am I getting traffic but no leads?",
+  "How do I turn search traffic into revenue?",
+];
+
 export default function HeroSection() {
   // Typing animation
   const [searchIndex, setSearchIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
 
-  const prompts = [
-    "How do I get my business higher on Google?",
-    "How do I rank higher in AI search results?",
-    "How do I rank higher on Google Maps?",
-    "Why am I getting traffic but no leads?",
-    "How do I turn search traffic into revenue?",
-  ];
-
   useEffect(() => {
     let charIndex = 0;
 
     const typeEffect = () => {
-      const currentPrompt = prompts[searchIndex];
+      const currentPrompt = PROMPTS[searchIndex];
       setTypedText(currentPrompt.slice(0, charIndex));
       charIndex++;
 
@@ -43,7 +43,7 @@ export default function HeroSection() {
         if (interval) clearInterval(interval);
 
         setTimeout(() => {
-          setSearchIndex((prev) => (prev + 1) % prompts.length);
+          setSearchIndex((prev) => (prev + 1) % PROMPTS.length);
           setTypedText("");
         }, 2000);
       }
