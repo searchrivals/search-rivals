@@ -31,8 +31,8 @@ export default function FooterV1() {
   };
 
   return (
-    <footer className="w-full bg-black text-white border-t border-white/10 pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+    <footer className="w-full max-w-full overflow-hidden bg-black text-white border-t border-white/10 pt-32 pb-20">
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
 
         {/* ====================================================== */}
         {/* ROW 1 — BRAND + SERVICES + INDUSTRIES */}
@@ -144,7 +144,7 @@ export default function FooterV1() {
         {/* ====================================================== */}
         {/* ROW 2 — GEO LOCATIONS */}
         {/* ====================================================== */}
-        <div className="grid grid-cols-5 text-center pb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 text-center pb-12">
           {[
             ["LV", "Las Vegas, NV (HQ)"],
             ["CO", "Denver, CO"],
@@ -224,7 +224,7 @@ export default function FooterV1() {
         <div className="flex flex-col md:flex-row justify-between text-xs text-gray-500 pt-6">
           <span>© Copyright 2025 Search Rivals LLC | Founded 2025</span>
 
-          <div className="space-x-6 mt-4 md:mt-0">
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 md:mt-0">
             <Link href="/cookies" className="hover:text-white">Cookies Disclaimer</Link>
             <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
             <Link href="/sitemap" className="hover:text-white">Sitemap</Link>

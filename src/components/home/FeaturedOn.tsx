@@ -28,14 +28,14 @@ export default function FeaturedOn() {
 
       {/* Decorative Line */}
       <LineDraw
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] opacity-20"
+        className="absolute top-0 left-1/2 w-[calc(100%-2rem)] max-w-[1400px] -translate-x-1/2 opacity-20"
         path="M 20 100 C 150 0, 650 200, 780 100"
         width={2}
         delay={0.1}
       />
 
       {/* Full-Width Logo Marquee */}
-      <div className="relative w-screen overflow-hidden">
+      <div className="relative w-full max-w-full overflow-hidden">
         <motion.div
           className="flex items-center gap-16 sm:gap-20 px-[10vw] will-change-transform"
           style={{ minWidth: "200%" }}
