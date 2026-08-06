@@ -33,7 +33,6 @@ export default function HeroSection() {
 
   useEffect(() => {
     let charIndex = 0;
-    let interval: ReturnType<typeof setInterval> | undefined;
 
     const typeEffect = () => {
       const currentPrompt = prompts[searchIndex];
@@ -42,6 +41,7 @@ export default function HeroSection() {
 
       if (charIndex > currentPrompt.length) {
         if (interval) clearInterval(interval);
+
         setTimeout(() => {
           setSearchIndex((prev) => (prev + 1) % prompts.length);
           setTypedText("");
@@ -49,7 +49,8 @@ export default function HeroSection() {
       }
     };
 
-    interval = setInterval(typeEffect, 50);
+    const interval = setInterval(typeEffect, 50);
+
     return () => interval && clearInterval(interval);
   }, [searchIndex]);
 
@@ -60,15 +61,15 @@ export default function HeroSection() {
   return (
     <section
       ref={heroRef}
-      className="relative flex flex-col items-center justify-center text-center py-24 px-6 
+      className="relative flex flex-col items-center justify-center text-center py-24 px-6
                  z-10 w-full max-w-[100vw] overflow-hidden"
     >
       {/* =============================== */}
       {/* HOLOGRAPHIC SWEEP (NON-INTERACTIVE) */}
       {/* =============================== */}
       <motion.div
-        className="pointer-events-none absolute top-0 left-0 w-full h-full 
-                   bg-gradient-to-br from-[#1A73E8]/25 via-[#7E3FF2]/25 to-transparent 
+        className="pointer-events-none absolute top-0 left-0 w-full h-full
+                   bg-gradient-to-br from-[#1A73E8]/25 via-[#7E3FF2]/25 to-transparent
                    blur-2xl mix-blend-screen"
         style={{ transform: "skewX(-18deg)" }}
         initial={{ x: "-140%", opacity: 0 }}
@@ -78,7 +79,7 @@ export default function HeroSection() {
 
       {/* AMBIENT BACKGROUND GLOW */}
       <motion.div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b 
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b
                    from-[#1A73E8]/12 via-transparent to-[#7E3FF2]/12"
         animate={isInView ? { opacity: [0.65, 1, 0.65] } : {}}
         transition={{ duration: 4, repeat: Infinity, repeatType: "reverse" }}
@@ -87,7 +88,10 @@ export default function HeroSection() {
       {/* GRAIN TEXTURE */}
       <motion.div
         className="pointer-events-none absolute inset-0 opacity-20 mix-blend-soft-light"
-        style={{ backgroundImage: "url('/noise.png')", backgroundSize: "300px" }}
+        style={{
+          backgroundImage: "url('/images/noise.png')",
+          backgroundSize: "300px",
+        }}
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 0.22 } : {}}
         transition={{ duration: 1.2, delay: 0.4 }}
@@ -160,7 +164,7 @@ export default function HeroSection() {
       >
         {/* Boot-up glow */}
         <motion.div
-          className="pointer-events-none absolute inset-0 rounded-full 
+          className="pointer-events-none absolute inset-0 rounded-full
                      bg-gradient-to-r from-[#1A73E8]/30 to-[#7E3FF2]/30 blur-3xl"
           initial={{ opacity: 0, scale: 0.7 }}
           animate={isInView ? { opacity: 0.5, scale: 1.05 } : {}}
@@ -180,9 +184,14 @@ export default function HeroSection() {
         />
 
         {/* Search bar */}
-        <div className="relative bg-white/10 backdrop-blur-md border border-[#1A73E8]/30 
-                        rounded-full shadow-lg flex items-center px-6 py-4 overflow-hidden">
-          <Search className="w-5 h-5 text-[#B0B0B0] mr-4" strokeWidth={2} />
+        <div
+          className="relative bg-white/10 backdrop-blur-md border border-[#1A73E8]/30
+                     rounded-full shadow-lg flex items-center px-6 py-4 overflow-hidden"
+        >
+          <Search
+            className="w-5 h-5 text-[#B0B0B0] mr-4"
+            strokeWidth={2}
+          />
 
           <motion.span
             className="text-gray-200 text-lg md:text-xl whitespace-nowrap truncate text-left flex-1"
@@ -212,7 +221,7 @@ export default function HeroSection() {
         >
           <Button
             size="lg"
-            className="cursor-pointer bg-[#1A73E8] hover:bg-[#1559b2] 
+            className="cursor-pointer bg-[#1A73E8] hover:bg-[#1559b2]
                        text-lg px-10 py-6 rounded-2xl shadow-lg"
           >
             Get Your Free Audit
@@ -227,7 +236,7 @@ export default function HeroSection() {
           <Button
             size="lg"
             variant="outline"
-            className="cursor-pointer border-[#7E3FF2] text-[#1A73E8] 
+            className="cursor-pointer border-[#7E3FF2] text-[#1A73E8]
                        text-lg px-10 py-6 rounded-2xl"
           >
             See Our Work
