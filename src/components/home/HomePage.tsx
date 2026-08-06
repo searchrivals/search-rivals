@@ -17,7 +17,6 @@ import WhyBrandsLoseVisibility from "./WhyBrandsLoseVisibility";
 import WhyFastGrowingChoose from "./WhyFastGrowingChoose";
 import ToughMarketsStrip from "./ToughMarketsStrip";
 import NinetyDayDominoCTA from "./NinetyDayDominoCTA";
-import WhyChooseUs from "./WhyChooseUs";
 import ConclusionCTA from "./ConclusionCTA";
 
 // ---------------------------------------------
@@ -60,10 +59,7 @@ export default function HomePage() {
       {/* 11. 90-DAY MOMENTUM CTA */}
       <NinetyDayDominoCTA />
 
-      {/* 12. WHY CHOOSE US (CEO Contact Form) */}
-      <WhyChooseUs />
-
-      {/* 13. HOMEPAGE CONCLUSION CTA */}
+      {/* 12. HOMEPAGE CONCLUSION CTA */}
       <ConclusionCTA />
     </main>
   );
